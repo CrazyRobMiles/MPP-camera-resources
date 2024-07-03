@@ -1,0 +1,43 @@
+import Mesh
+import Part
+from FreeCAD import Base
+import sys
+
+import math
+import random
+
+barDepth=19.0
+railWidth=4.0
+railXInnerSpacing=71.0
+railXOverhang=4.0
+slotHeight=3.0
+barHeight=5.0
+springWidth = 15.0
+springDepth=10.0
+
+totalWidth=railXInnerSpacing+2*(railWidth+railXOverhang)
+
+spacer = Part.makeBox(totalWidth,barDepth, barHeight)
+
+slot = Part.makeBox(railWidth,barDepth, slotHeight,Base.Vector(railXOverhang,0,0))
+spacer=spacer.cut(slot)
+slot.translate(Base.Vector(railXInnerSpacing+railWidth,0,0))
+spacer=spacer.cut(slot)
+
+slot = Part.makeBox(railXOverhang,barDepth/2.0, slotHeight,Base.Vector(0,0,0))
+spacer=spacer.cut(slot)
+
+slot.translate(Base.Vector(totalWidth-railXOverhang,0,0))
+spacer=spacer.cut(slot)
+
+slot = Part.makeBox(springWidth,springDepth, barHeight,Base.Vector((totalWidth-springWidth)/2.0,barDepth-springDepth,0))
+spacer=spacer.cut(slot)
+
+
+Part.show(spacer)
+Gui.SendMsgToActiveView("ViewFit")
+Gui.activeDocument().activeView().viewAxometric()
+
+
+
+
